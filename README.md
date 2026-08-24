@@ -2,20 +2,24 @@
 
 A multi-agent workflow I designed and run for my own job search.
 
-It turns noisy job alerts into **application-ready packets**: the employer apply page, a one-page tailored resume, and a short cover letter. I built it as a program manager who ships evaluation and data-ops systems, not as a demo of "AI wrote my applications."
+It turns noisy job alerts and high value new opportunities into a **review and submit workflow.** I built it as a program manager who ships evaluation and data-ops systems, not as a demo of "AI wrote my applications."
 
-This repo is the **public case study**. The live agents, inbox, source-of-truth resume bank, and tracker stay private.
+This repo is the **public case study**. The live agents, inbox, source-of-truth meta-resume, and tracker stay private. Some agent prompts (at least the meaty bits) are included here.
 
 ## Why this exists
 
-LinkedIn Job Alerts are a firehose. A typical digest has several roles, truncated listings, tracking URLs, and repeats. Generating a resume for every card floods Drive and wastes attention.
+Applying to jobs is time consuming, but generating bespoke resumes freshly upon pasting a job description frequently ends up in pure slop.
 
-The product question is not "can an agent write a resume?" It is:
-
-- What is the **unit of output** a human can actually use?
-- Which **quality gates** keep the system from generating junk?
-- How do you split work across specialists so no single agent becomes a god-bot?
-- Where does the **human stay on the last mile** (review + Submit), because the ATS will not cooperate otherwise?
+- What are the **units of output** a job applicant actually needs to produce that an AI can do effectively?
+  - Resume with only relevant experience + cover letter telling a hiring manager what they want to hear + application fields pre-filled
+- Which **quality checks** keep the system from generating junk?
+  - Choosing only the best items from a master/meta-resume that has all job duties and achievements, NOT generating anything fantastical or new
+  - Having a review bot that ensures I'm not bs'ing or pulling irrelevant history
+- How do you split work across specialists so **no single agent becomes overwhelmed OR a god-bot?**
+  - Basically, if a unique artifact is being generated, make it a separate agent
+  - Administrative tasks can be lumped together based on workflow timing and/or task similarity
+- Where is the **human-in-loop contribution** (review + Submit), because the ATS will not cooperate otherwise?
+  - Authentication, captcha completion, final review of resumes + cover letters, final review of application fields, actually clicking 'submit.'
 
 ## Stack
 
