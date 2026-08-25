@@ -4,13 +4,13 @@
 
 I built a few helpers to take the boring parts of my job search off my plate: finding positions, tailoring resumes, drafting cover letters, and filling out forms.
 
-This is, conservatively, 5x faster than doing it by hand. The bots never make up jobs I didn’t have, or skills I don’t have. They work from a grounded base of data that I built myself, and the trickiest tasks like resume generation have their own bot.
+This is, conservatively and verifiably, **5x faster than doing it by hand.** The bots never make up jobs I didn’t have, or skills I don’t have. They work from a grounded base of data that I built myself, and the trickiest tasks like resume generation have their own bot.
 
-This page is the public story of how all of this works.\
+This page is the public story of how all of this works.
 
 ## Who does what
 
-**Job Watcher** reads job-alert emails and also searches LinkedIn for new postings. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). It logs them as Waiting for Review. It does not fill 10 Ready by itself.
+**Job Watcher** reads job-alert emails and also searches LinkedIn for new postings. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). It logs them as Waiting for Review.
 
 **Resume Generator** opens my private work history (about 10 years of real jobs) and builds a one-page resume for that posting. It picks the relevant parts, shortens them, and may reuse the posting’s words when they still mean the same real work. It will not invent a job, a date, a tool, or a skill.
 
@@ -18,23 +18,21 @@ This page is the public story of how all of this works.\
 
 **Cover Letter Generator** writes a short letter from the resume that passed review, not from thin air.
 
-**Consigliere** works with me, keeps the other bots in line, holds them accountable, and pushes back on bad decisions. It still fills the application form and attaches the PDFs. It never clicks Submit.
+**Consigliere** works with me, keeps the other bots in line, holds them accountable, and pushes back on bad decisions. It also fills the application form and attaches the PDFs. It never clicks Submit.
 
-I do captcha, logins, a last look, and the Submit click.
+I, the **User**, do captcha, logins, a last look, and the Submit click.
 
 ## A typical morning
 
-Times are Pacific.
+6:30am — **Job Watcher** harvests jobs from new job alert email, and conducts browser searches of new positions on LinkedIn. For each good one, it adds a row to my job tracking sheet: company, role, posted pay, when it was posted, the apply link. Status starts as Waiting for Review. Resume and letter docs wait.
 
-6:30am — Job Watcher looks at new emails and new listings. For each good one, it adds a row to my job tracking sheet: company, role, posted pay, when it was posted, the apply link. Status starts as Waiting for Review. Resume and letter docs wait.
+7:00am — **Consigliere** checks that harvest happened. It does not auto-generate resumes or letters unless the fit is very strong. Otherwise, it waits on me to change the status from 'Waiting for Review' to 'Ready.'
 
-7:00am — Consigliere checks that harvest happened. It does not auto-generate resumes or letters.
+8:30am — Quiet unless harvest failed. If failure, **User** notified and can intervene. If harvest succeeded, nobody bothers me.
 
-8:30am — Quiet unless harvest failed. If Watcher already logged the morning, nobody bothers me.
+Late morning — When I sit down, **Consigliere** and I walk the 'Ready' list until those rows say 'Applied.' When Ready is already full, we do not add more rows until I ask. When I’m close to finishing the queue, Consigliere asks if I want more for the day. Otherwise we just muscle through what we have and e-high-five, because why not.
 
-Late morning — When I sit down, Consigliere and I walk the Ready list until those rows say Applied. When Ready is already full, we do not add more rows until I ask. When I’m close to finishing the queue, Consigliere asks if I want more for the day. Otherwise we just muscle through what we have and e-high-five, because why not.
-
-3:00pm on weekdays — Job Watcher only checks “you got an interview / you got rejected” mail. It does not pile on more new jobs. It just updates my tracking sheet.
+3:00pm on weekdays — **Job Watcher** only checks “you got an interview / you got rejected” mail. It does not pile on more new jobs. It just updates my tracking sheet.
 
 ## Resume generator in action
 
