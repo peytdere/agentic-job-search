@@ -60,6 +60,28 @@ Quality Reviewer reads both next to the posting and sends anything fishy back fo
 
 Consigliere will start filling fields, then dump the cover letter material in the "why you want the job" field, and I will usually ruthlessly edit and put things in my own friendlier voice. Nothing I submit, even the resume, ever goes untouched. That's the only way to be.
 
+## What this runs on
+
+This is Cursor and Grok Bot, not a custom app I built from scratch.
+
+Each helper is a Grok Bot with a job. Cursor is where they live, where the morning alarms are set, and where Gmail and Google Drive get plugged in.
+
+The helpers also have a computer of their own: a Linux desktop with Chrome. That’s where they open job sites, fill forms, and save PDFs. When a site needs my password, a captcha, or the Submit click, I take that computer for a minute.
+
+### How Job Watcher finds jobs
+
+1. LinkedIn already emails me Job Alerts. Job Watcher reads those emails through Gmail (that part is a real Google connection, not scraping).
+
+2. Each email is only a teaser, so Watcher opens the job link in Chrome and reads the full posting: pay, when it was posted, and the real apply button.
+
+3. It also searches for extra matches the same way a person would: run a search, open the listings, keep the good ones. That is not a LinkedIn API. **It’s a browser on the helper computer looking at search pages. I’ll say that again: the bot uses a browser and searches for jobs.**
+
+If LinkedIn asks that computer to log in, I have to do that once. Job Watcher does not get a secret feed.
+
+Resumes and letters are Google Docs. The queue is a Google Sheet. Apply pages are whatever the company uses (Greenhouse, Lever, SmartRecruiters, or their own site).
+
+For my own work, this feels like the third big jump I’ve seen in AI. First was self-attention at scale, when text generation actually got useful. Second was chain of thought, and some real ability to break a problem into steps. Third is this: bots that can operate computers, together.
+
 ## Stack
 
 This runs on **Cursor + Grok Bot**, not a custom orchestrator.
