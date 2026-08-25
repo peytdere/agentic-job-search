@@ -26,6 +26,20 @@ This page is the public story of how that works. My inbox, my full work history,
 
 I do captcha, logins, a last look, and the Submit click.
 
+## A typical morning
+
+Times are Pacific.
+
+6:30am — Job Watcher looks at new emails and new listings. For each good one, it adds a row to my job tracking sheet: company, role, posted pay, when it was posted, the apply link, and later the resume and letter links. Status starts as Ready.
+
+7:00am — If we don’t have 10 good ones yet, Consigliere gives everyone a nudge.
+
+8:30am — If we’re still short, I get one ping. If we already have 10, nobody bothers me.
+
+Late morning — When I sit down, Consigliere and I walk the Ready list until those rows say Applied. When I’m close to finishing the queue, Consigliere asks if I want more for the day. Otherwise we just muscle through what we have and e-high-five, because why not.
+
+3:00pm on weekdays — Job Watcher only checks “you got an interview / you got rejected” mail. It does not pile on more new jobs. It just updates my tracking sheet.
+
 ## Stack
 
 This runs on **Cursor + Grok Bot**, not a custom orchestrator.
