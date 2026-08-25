@@ -4,10 +4,6 @@
 
 I built a few helpers to take the boring parts of my job search off my plate.
 
-Every morning Job Watcher reads job-alert emails and searches new listings, then logs the good ones as Waiting for Review. Resume Generator builds a one-page resume from my real work history — after I (or a slam dunk) say the row is ready. Quality Reviewer checks it against the job posting for quality, fit, and gaps. Cover Letter Generator writes a short letter from that resume. Consigliere works with me, keeps the other bots in line, holds them accountable, and pushes back on bad decisions. It still fills in the application and attaches the PDFs. It never clicks Submit.
-
-I still read the form, double-check what I’m actually sending, do any captcha or login, and click Submit.
-
 This is about 5x faster than doing it by hand. The bots never make up jobs I didn’t have, or skills I don’t have. If a posting uses different words for the same real work, they decide carefully whether to match those words. If the work isn’t in my history, they leave it out.
 
 This page is the public story of how that works. My inbox, my full work history, and the live job list stay private.
