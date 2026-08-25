@@ -40,6 +40,26 @@ Late morning — When I sit down, Consigliere and I walk the Ready list until th
 
 3:00pm on weekdays — Job Watcher only checks “you got an interview / you got rejected” mail. It does not pile on more new jobs. It just updates my tracking sheet.
 
+## Resume generator in action
+
+I keep one large private file of about 10 years of real work: jobs, dates, what I actually did, and the numbers that are true. It's basically the DISTINCT and UNION of 4 recent resumes that I put real time and effort into. That file never goes on GitHub.
+
+For each posting, Resume Generator does three things:
+
+1. Picks the parts of my history that match this job.
+
+2. Shrinks those parts onto one page. It usually ends up being more than one and less than two when the final doc is generated, because LLMs are ADHD-adjacent, but that's okay. I'm not looking to dazzle with forceful brevity and a clean set of punches. I'm just making sure I am thorough while not completely overwhelming the human who might actually read it.
+
+3. Sometimes uses the posting’s words when they still mean the same real work.
+
+It will not invent a job, a date, a tool, or a skill. If the posting wants something I have never done, that line stays off the page.
+
+Cover Letter Generator only writes after that resume exists. The letter has to match the resume, not a fantasy version of me. These files are not commonly required, but they usually don't go to waste, either. Most application pages ask if you want to explain why you want the job.
+
+Quality Reviewer reads both next to the posting and sends anything fishy back for a fix.
+
+Consigliere will start filling fields, then dump the cover letter material in the "why you want the job" field, and I will usually ruthlessly edit and put things in my own friendlier voice. Nothing I submit, even the resume, ever goes untouched. That's the only way to be.
+
 ## Stack
 
 This runs on **Cursor + Grok Bot**, not a custom orchestrator.
