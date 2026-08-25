@@ -4,12 +4,12 @@
 
 I built a few helpers to take the boring parts of my job search off my plate.
 
-- Every morning **Job Watcher** reads job-alert emails and searches new listings until there are up to 10 good ones in my applications queue.
-- **Resume Generator** builds a one-page resume from my real work history.
-- **Quality Reviewer** checks it against the job posting for quality, fit, and gaps.
-- **Cover Letter Generator** writes a short letter from that resume.
-- **Consigliere** handles surprises, fills in the application, and attaches the PDFs.
-- I read the application form, double-check what I’m actually sending, do any captcha or login along the way, and click Submit.
+- Every morning **Job Watcher** looks for jobs. 
+- **Resume Generator** builds resumes.
+- **Quality Reviewer** checks resumes for quality.
+- **Cover Letter Generator** writes from the checked resumes.
+- **Consigliere** handles surprises and fills in the application.
+- I as the **User** read the application form, double-check what I’m actually sending, do any captcha or login along the way, and click Submit.
 
 **This is about 5x faster than doing it by hand.** The bots never make up jobs I didn’t have, or skills I don’t have. If a posting uses different words for the same real work, they decide carefully whether to match those words. If the work isn’t in my history, they leave it out.
 
@@ -17,7 +17,7 @@ This page is the public story of how that works. My inbox, my full work history,
 
 ## Who does what
 
-**Job Watcher** reads job-alert emails and also searches LinkedIn for new postings. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). 
+**Job Watcher** reads job-alert emails and searches new LinkedIn listings until there are up to 10 good ones in my applications queue. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). 
 
 **Resume Generator** opens my private work history (about 10 years of real jobs) and builds a one-page resume for that posting. It picks the relevant parts, shortens them, and may reuse the posting’s words when they still mean the same real work. It will not invent a job, a date, a tool, or a skill.
 
@@ -25,13 +25,11 @@ This page is the public story of how that works. My inbox, my full work history,
 
 **Cover Letter Generator** writes a short letter from the resume that passed review, not from thin air.
 
-**Consigliere** is the traffic cop. It kicks the others when they stall, fills the application form, attaches the PDFs, and pings me when the only thing left is Submit.
+**Consigliere** is the traffic cop. It kicks the others when they stall, fills the application form, converts Google Docs to PDFs and attachesm, and pings me when the only thing left is Submit.
 
 I do captcha, logins, a last look, and the Submit click.
 
 ## A typical morning
-
-Times are Pacific.
 
 6:30am — Job Watcher looks at new emails and new listings. For each good one, it adds a row to my job tracking sheet: company, role, posted pay, when it was posted, the apply link, and later the resume and letter links. If the fit is solid, Status starts as 'Ready.' If the fit is questionable, Status is 'Review' and nothing else happens with the listing until I give the thumbs up. It stops at 10 good ones for the day. 
 
@@ -43,11 +41,25 @@ Late morning — When I sit down, Consigliere and I walk the Ready list until th
 
 3:00pm on weekdays — Job Watcher only checks “you got an interview / you got rejected” mail. It does not pile on more new jobs. It just updates my tracking sheet.
 
+## How Job Watcher finds jobs
+
+1. LinkedIn already emails me Job Alerts. Job Watcher reads those emails through Gmail (that part is a real Google connection, not scraping).
+
+2. Each email is only a teaser, so Watcher opens the job link in Chrome and reads the full posting: pay, when it was posted, and the real apply button.
+
+3. It also searches for extra matches the same way a person would: run a search, open the listings, keep the good ones. That is not a LinkedIn API. It’s a browser on the helper computer looking at search pages. **I’ll say that again for those of us not already using similar tools: the bot uses a browser and searches for jobs.** Pretty capably, too.
+
+I'll dwell on that last point. For my own work, this feels like the third big jump I’ve seen in AI. First was self-attention at scale, when text generation actually got useful. Second was chain of thought, and some real ability to break a problem into steps. Third is this: bots that can operate computers, together, and actually take the problem solving into non-API realms.
+
+If LinkedIn asks that computer to log in, I have to do that once. Job Watcher does not get a secret feed.
+
+Resumes and letters are Google Docs. The queue is a Google Sheet. Apply pages are whatever the company uses (Greenhouse, Lever, SmartRecruiters, or their own site).
+
 ## Resume generator in action
 
 I keep one large private file of about 10 years of real work: jobs, dates, what I actually did, and the numbers that are true. It's basically the DISTINCT and UNION of 4 recent resumes that I put real time and effort into. That file never goes on GitHub.
 
-For each posting, Resume Generator does three things:
+For each posting, **Resume Generator** does three things:
 
 1. Picks the parts of my history that match this job.
 
@@ -57,11 +69,13 @@ For each posting, Resume Generator does three things:
 
 It will not invent a job, a date, a tool, or a skill. If the posting wants something I have never done, that line stays off the page.
 
-Cover Letter Generator only writes after that resume exists. The letter has to match the resume, not a fantasy version of me. These files are not commonly required, but they usually don't go to waste, either. Most application pages ask if you want to explain why you want the job.
+## The rest of the workflow
 
-Quality Reviewer reads both next to the posting and sends anything fishy back for a fix.
+**Quality Reviewer** reads the resume next to the posting and sends anything fishy back for a fix.
 
-Consigliere will start filling fields, then dump the cover letter material in the "why you want the job" field, and I will usually ruthlessly edit and put things in my own friendlier voice. Nothing I submit, even the resume, ever goes untouched. That's the only way to be.
+**Cover Letter Generator** only writes after that resume exists. The letter has to match the resume, not a fantasy version of me. These files are not commonly required, but they usually don't go to waste, either. Most application pages ask if you want to explain why you want the job.
+
+**Consigliere** will start filling fields, then dump the cover letter material in the "why you want the job" field, and I will usually ruthlessly edit and put things in my own friendlier voice. Nothing I submit, even the resume, ever goes untouched. That's the only way to be.
 
 ## What this runs on
 
@@ -71,19 +85,7 @@ Each helper is a Grok Bot with a job. Cursor is where they live, where the morni
 
 The helpers also have a computer of their own: a Linux desktop with Chrome. That’s where they open job sites, fill forms, and save PDFs. When a site needs my password, a captcha, or the Submit click, I take that computer for a minute.
 
-### How Job Watcher finds jobs
 
-1. LinkedIn already emails me Job Alerts. Job Watcher reads those emails through Gmail (that part is a real Google connection, not scraping).
-
-2. Each email is only a teaser, so Watcher opens the job link in Chrome and reads the full posting: pay, when it was posted, and the real apply button.
-
-3. It also searches for extra matches the same way a person would: run a search, open the listings, keep the good ones. That is not a LinkedIn API. **It’s a browser on the helper computer looking at search pages. I’ll say that again: the bot uses a browser and searches for jobs.**
-
-If LinkedIn asks that computer to log in, I have to do that once. Job Watcher does not get a secret feed.
-
-Resumes and letters are Google Docs. The queue is a Google Sheet. Apply pages are whatever the company uses (Greenhouse, Lever, SmartRecruiters, or their own site).
-
-For my own work, this feels like the third big jump I’ve seen in AI. First was self-attention at scale, when text generation actually got useful. Second was chain of thought, and some real ability to break a problem into steps. Third is this: bots that can operate computers, together.
 
 ## How long this takes
 
@@ -107,8 +109,6 @@ This runs on **Cursor + Grok Bot**, not a custom orchestrator.
 | Mail / files | Gmail and Google Drive connectors |
 | Artifacts | Google Docs (resumes, letters) and Google Sheets (tracker) |
 | ATS surfaces | Greenhouse, Lever, SmartRecruiters (plus employer career pages when those resolve) |
-
-LinkedIn is an **email ingest**, not an API. Job alerts land in Gmail; the watcher reads those messages. There is no LinkedIn posting API in this design.
 
 ## Architecture
 
