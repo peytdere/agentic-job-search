@@ -82,6 +82,16 @@ Resumes and letters are Google Docs. The queue is a Google Sheet. Apply pages ar
 
 For my own work, this feels like the third big jump I’ve seen in AI. First was self-attention at scale, when text generation actually got useful. Second was chain of thought, and some real ability to break a problem into steps. Third is this: bots that can operate computers, together.
 
+## How long this takes
+
+These are guesses from using it, not a stopwatch study.
+
+By hand, one application is about 30 to 50 minutes of real focus, mostly tailoring the resume and hitting keywords so the ATS doesn’t throw it out.
+
+With this system, one application is about 5 to 10 minutes. A lot of that is waiting for Consigliere to fill fields carefully, or for a captcha or login to show up. I can do something else in that window, or just relax and play with my toddler.
+
+Ten 'Ready' jobs is about 5 to 8 hours by hand, or about an hour of half-attention with the helpers. That’s roughly 5x faster, which is the point.
+
 ## Stack
 
 This runs on **Cursor + Grok Bot**, not a custom orchestrator.
