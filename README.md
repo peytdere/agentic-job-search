@@ -109,140 +109,11 @@ LinkedIn is an **email ingest**, not an API. Job alerts land in Gmail; the watch
 
 ## Architecture
 
-Default path is harvest → Waiting for Review → approve → generate → Quality Reviewer → letter → Ready. Consigliere sits **beside** it (policy, harvest check, pushback) and on the approve step. Submit is never on the agent path.
-
-```mermaid
-flowchart LR
-  cons[Consigliere]
-
-  subgraph defaultPath [Default path]
-    direction LR
-    alerts[Job alerts] --> watcher[Watcher]
-    watcher -->|Waiting for Review| approve[Human or Consigliere approve]
-    approve --> gen[Resume generator]
-    gen --> qr[Quality reviewer]
-    qr --> letter[Cover letter]
-    letter -->|Ready| tracker[Tracker]
-  end
-
-  cons -.-> watcher
-  cons -.-> approve
-  cons -.-> gen
-  cons -.-> qr
-  cons -.-> letter
-
-  watcher -->|fails gates| skip[Skip — success]
-  tracker --> walk[Human apply-walk]
-  walk --> submit[Submit — human only]
-```
-
-Quality Reviewer is **on the default path**, between the resume and the letter. Watcher logs the tracker as Waiting for Review. Human or Consigliere approve. Then gen → QR → letter → Ready. A human then walks Ready → Applied and clicks **Submit**.
-
 See [docs/architecture.md](docs/architecture.md) for data flow and failure modes.
 
 ## Agents
 
-Specialists beat a god-bot. Resume quality and cover-letter voice are different jobs. Mixing them made worse artifacts.
-
-| Role | Owns | Does not own |
-| --- | --- | --- |
-| **Consigliere** | Works with the human, keeps specialists in line, holds them accountable, pushes back on bad calls. Policy, harvest check, form-fill up to but not including Submit. | Writing resumes or letters. Harvest. Submit. Filling 10 Ready at 7am. Adding rows when Ready is already full. Generating before review. |
-| **Watcher** | Ingest (Gmail alerts + searches), parse, gates, dedupe, skip log. Tracker row as Waiting for Review with apply URL. Frugal: search + log. | Writing application materials. Auto-kicking Resume Generator. Following every JD into a packet. Clicking Submit. |
-| **Resume generator** | One-page tailored Google Doc from a verified source bank, after approval or slam dunk. Echo apply URL. Tracker resume link. | Inventing employers, dates, titles, or metrics. Hunting jobs. Letters. |
-| **Cover letter** | Short letter grounded in **that** resume + the JD, after a Quality Reviewer pass. Third tracker link. Status → Ready. | Hunting jobs. Writing the resume. Submit. |
-| **Quality reviewer** (default path) | A second pass on **every** packet before the letter (facts vs source bank, fit, gaps). | Changing gates. Marking Ready. Submit. |
-
-None of them own captcha, ATS file pickers, Gmail/Drive OAuth, login/2FA on the agent computer, or recruiter inbound. Details: [docs/agents.md](docs/agents.md), [docs/human-in-the-loop.md](docs/human-in-the-loop.md). How a one-pager is cut from the source bank: [Resume and cover-letter strategy](#resume-and-cover-letter-strategy).
-
-## Output contract
-
-Every qualifying job becomes one tracker row. Status starts as **Waiting for Review**. Ready only after resume + letter after human (or slam dunk) approval.
-
-| Apply URL | Resume | Cover letter | Status |
-| --- | --- | --- | --- |
-| Employer careers / ATS page when possible (Greenhouse, Lever, SmartRecruiters). LinkedIn job URL only as fallback. Harvest logs this first. | One-page tailored Google Doc, after approval | Short letter grounded in that resume + the posting, after Quality Reviewer | Waiting for Review → (approve) → Ready → human walks to Applied |
-
-If a posting has no salary, misses the compensation floor, is a repeat, is older than 60 days, or has **no post date**, the system **skips**. Skip is a successful outcome.
-
-## Resume and cover-letter strategy
-
-The pipeline does not dump a whole career onto every posting. It keeps one private **source bank** (a **meta-resume** / super-resume): a collated, verified file of about **10 years of real work** — employers, titles, dates, bullets, metrics. That bank is the **only fact source**. It is not published. This repo does not contain it.
-
-For each qualifying job, the resume generator:
-
-1. **Selects** the subset of the bank that is relevant to *this* posting (for example evals vs fleet ops vs director of an AI platform — not all three at once).
-2. **Condenses** that subset onto **one page**. Extra real experience stays in the bank.
-3. **Rewords** kept bullets to match the posting's language and keywords **when the underlying fact is the same**. SQL against evaluation logs can be phrased as operational telemetry if that is what actually happened. Rewording is not a new claim.
-
-Tailoring is choose / shorten / drop / rephrase. It is not invention.
-
-**Hard ban:** never invent employers, dates, titles, tools, or metrics. If the bank cannot support a keyword the JD wants, **omit it**. Do not hallucinate a Tableau dashboard that was never built.
-
-The cover letter is written **after** that resume, from **that resume + the JD only**. Same no-invention rule. Short, specific, no "I am writing to express." No "AI wrote this." It must not claim facts that are not on the tailored resume or in the bank.
-
-Quality Reviewer is on the default path. It checks facts against the bank, fit against the posting, and that the letter will be grounded in the resume that was just written. No letter without a pass.
-
-```mermaid
-flowchart LR
-  bank["Source bank / meta-resume"]
-  jd[Job posting]
-  tailor["Select, condense, reword"]
-  resume[One-page resume]
-  letter[Cover letter]
-
-  bank --> tailor
-  jd --> tailor
-  tailor --> resume
-  resume --> letter
-  jd --> letter
-```
-
-Facts cannot be created. They can only be selected and rephrased.
-
-## Example policy (gates)
-
-These are product decisions, not prompts-as-magic. Numbers below are **this search's example policy**, not universal advice.
-
-1. **New work only.** Do not replay a historical inbox backlog on day one.
-2. **Posted compensation required.** No salary in the posting → skip. Do not guess.
-3. **Floor.** Example: **$200k posted**. A range counts only if it actually reaches the floor; a $90k–$120k posting is not "kind of $200k."
-4. **Freshness.** Skip if the posting is older than **60 days**, or if there is **no post date**.
-5. **Role match, fit first.** Title and posting have to look like the target family (HITL / evals / data ops / AI-related PM). Skip cloud infra, compute, SPMO, horizontal BizOps, and infra TPMs. Rank fit ahead of a bigger number. Pay is a floor, not a rank key. Adjacent junk in an alert digest gets skipped.
-6. **Dedupe by job id.** Same posting from two alerts is one packet.
-7. **Fetch enough to gate.** Email cards are not job descriptions. Resolve pay, post date, and the employer apply URL. Do not follow every JD into a packet.
-8. **Cap.** At most **~10 Ready** as a last-mile full queue. Harvest logs Waiting for Review; it does not fill 10 Ready by itself. When Ready is already full, do not add rows until the human asks.
-9. **No invention.** The source bank is collated from real work. Wording can be tailored. Employers, dates, titles, and metrics cannot be made up.
-10. **Letters don't confess.** Cover letters do not say "AI wrote this." For roles that are actually about AI systems, one sentence about having shipped this pipeline is a **project**, not a disclosure.
-
-## Daily schedule (Pacific)
-
-Times are **Pacific**. Harvest runs **every day, including weekends**. Outcome-mail is weekdays only.
-
-| Time (PT) | What | Notes |
-| --- | --- | --- |
-| **6:30am** | Watcher harvest | Daily, including weekends. Log Waiting for Review. Not a race to 10 Ready. Stop adding rows if Ready is already ~10. |
-| **7:00am** | Consigliere harvest-check | Confirm harvest happened. Do not start generators for unreviewed rows. Do not fill 10 Ready. |
-| **8:30am** | Quiet unless harvest failed | Stay quiet if harvest ran. One ping only if it did not. |
-| **3:00pm** | Outcome-mail **only** | Weekdays. Not a second harvest. |
-| Human, unscheduled | Apply-walk of Ready | Ready → Applied. Submit is human-only. When Ready is full, do not add more until the human asks. |
-
-Full cadence: [docs/schedule.md](docs/schedule.md).
-
-## Human-in-the-loop (limitations, not TODOs)
-
-The pipeline stops at **Ready**. A human finishes the apply. That is the design, not a gap to close with more agents.
-
-- **Captcha** — agents do not solve it.
-- **Submit is human-only** — apply-walk is allowed; clicking Submit is not.
-- **Gmail / Drive connect** — OAuth is a person in the browser.
-- **Login / 2FA on the agent computer** — first session on that Linux box + Chrome is human.
-- **LinkedIn via email, not API** — alerts in Gmail; no scraping LinkedIn as a substitute API.
-- **Greenhouse file picker** — native file choosers are a human step.
-- **Drive PDF export truncation** — one-page Docs can clip; a human skims the PDF when it matters.
-- **Recruiter inbound is not automated** — replies, screens, and threads stay human.
-- **Skip is success** — a gated no is better than a bad packet.
-
-Write-up: [docs/human-in-the-loop.md](docs/human-in-the-loop.md).
+Details: [docs/agents.md](docs/agents.md)
 
 ## Time comparison (ESTIMATES, not a timed study)
 
@@ -252,84 +123,16 @@ These are **order-of-magnitude estimates** from running the search, not a stopwa
 
 | | Estimate |
 | --- | --- |
-| Manual (no pipeline) | **70–120 min** |
-| This pipeline, human last mile | **2–8 min** |
+| Manual (no pipeline) | **30–50 min** |
+| This pipeline, human last mile | **5–10 min** |
 
-**A 10 Ready morning** (the daily cap)
-
-| | Estimate |
-| --- | --- |
-| Manual | **12–20 hours** (10 × 70–120 min) |
-| This pipeline, human | **20–80 min** (10 × 2–8 min) |
-
-**What is still human, per apply (ranges)**
-
-| Remaining step | Estimate |
+| Typical Workflow | Estimate |
 | --- | --- |
 | Review the Ready packet | 1–3 min |
 | Captcha, when present | 0.5–2 min |
 | First login / 2FA on a site | 1–3 min (amortized across later applies on that ATS) |
+| Optional resume skim (Doc linked in tracker) | 2–5 min |
 | Submit | ~10 seconds |
-| Optional resume skim (PDF / Doc) | 2–5 min |
-
-**One-time setup** (connectors, agent computer login, tracker sheet, source bank in Drive): **30–60 min**. Not counted in the per-apply numbers.
-
-```mermaid
-flowchart TB
-  subgraph manualEst [Manual — ESTIMATES, not a timed study]
-    direction TB
-    mFind[Harvest + read JD]
-    mResume[Tailor one-page resume]
-    mLetter[Draft cover letter]
-    mAts[Fill ATS + captcha + Submit]
-    mFind --> mResume --> mLetter --> mAts
-    mTotal[About 70–120 min per apply]
-    mTen[10 Ready: about 12–20 hours]
-  end
-
-  subgraph pipeEst [This pipeline — ESTIMATES]
-    direction TB
-    pAgents[Watcher + generator + QR + letter + tracker, unattended]
-    pHuman[Human: review / captcha / Submit]
-    pAgents --> pHuman
-    pTotal[Human about 2–8 min per apply]
-    pTen[10 Ready morning: about 20–80 min]
-  end
-```
-
-### Steps vs minutes (ESTIMATES)
-
-Agent column is **unattended** when the specialist owns the step. It is not a measured model-runtime. "—" means the row is not that actor's job. Totals are ranges on purpose.
-
-| Step | Manual (min) | Agent | Human now (min) |
-| --- | --- | --- | --- |
-| Harvest alerts, fetch full JD, resolve apply URL | 15–30 | unattended (Watcher) | — |
-| Gates: pay, role, age / post date, dedupe | 2–5 | unattended (Watcher) | — |
-| One-page tailored resume | 25–45 | unattended (Resume generator) | 0, or 2–5 if you skim |
-| Cover letter | 15–25 | unattended (Cover letter) | folded into review |
-| Review Ready packet | — | — | 1–3 |
-| ATS leftovers / Greenhouse file picker | 10–20 | cannot | usually inside the 1–3 review; worse pages take longer |
-| Captcha | 0.5–2 | cannot | 0.5–2 when present |
-| First login / 2FA (per site) | 1–3 | cannot | 1–3 first time that session |
-| Submit | ~0.2 (~10s) | **never** | ~10s |
-| **Per apply, typical** | **70–120** | unattended overnight / morning | **2–8** |
-| **10 Ready morning** | **12–20 hours** | unattended | **20–80 min** |
-| One-time setup | 30–60 | — | 30–60 once |
-
-A morning that already has 10 Ready does not ask the human to "catch up" on the rest of the firehose. Skip and the cap exist so the last mile stays short.
-
-## What I would tell a hiring manager
-
-This is a small production workflow:
-
-- **Ingest is unreliable** (digests, tracking links, missing salary, missing dates), so the watcher is a parser and a gate, not a writer.
-- **The unit of output** is a packet a human can apply from, not a folder of documents.
-- **Specialists beat a god-bot.** Resume writing needs a source bank. Watching needs parse + fetch + gates. Letters need the resume that actually exists.
-- **Skip is a feature.** Volume without gates is how you get a Drive full of mismatched one-pagers.
-- **Submit stays human.** Captcha, file pickers, and 2FA are not things I want an agent improvising through.
-- **The time win is last-mile compression**, estimated — not "the model applies for me."
-
-I am using the same instincts I use on evaluation and data-ops programs: define the contract, put gates where the data is dirty, keep a human on the last mile.
 
 ## What's in this repo
 
