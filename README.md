@@ -4,17 +4,20 @@
 
 I built a few helpers to take the boring parts of my job search off my plate.
 
-Every morning Job Watcher reads job-alert emails and searches new listings until there are up to 10 good ones in my applications queue. Resume Generator builds a one-page resume from my real work history. Quality Reviewer checks it against the job posting for quality, fit, and gaps. Cover Letter Generator writes a short letter from that resume. Consigliere handles surprises, fills in the application, and attaches the PDFs.
+- Every morning **Job Watcher** reads job-alert emails and searches new listings until there are up to 10 good ones in my applications queue.
+- **Resume Generator** builds a one-page resume from my real work history.
+- **Quality Reviewer** checks it against the job posting for quality, fit, and gaps.
+- **Cover Letter Generator** writes a short letter from that resume.
+- **Consigliere** handles surprises, fills in the application, and attaches the PDFs.
+- I read the application form, double-check what I’m actually sending, do any captcha or login along the way, and click Submit.
 
-I still read the form, double-check what I’m actually sending, do any captcha or login, and click Submit.
-
-This is about 5x faster than doing it by hand. The bots never make up jobs I didn’t have, or skills I don’t have. If a posting uses different words for the same real work, they decide carefully whether to match those words. If the work isn’t in my history, they leave it out.
+**This is about 5x faster than doing it by hand.** The bots never make up jobs I didn’t have, or skills I don’t have. If a posting uses different words for the same real work, they decide carefully whether to match those words. If the work isn’t in my history, they leave it out.
 
 This page is the public story of how that works. My inbox, my full work history, and the live job list stay private.
 
 ## Who does what
 
-**Job Watcher** reads job-alert emails and also searches LinkedIn for new postings. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). It stops at 10 good ones for the day.
+**Job Watcher** reads job-alert emails and also searches LinkedIn for new postings. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). 
 
 **Resume Generator** opens my private work history (about 10 years of real jobs) and builds a one-page resume for that posting. It picks the relevant parts, shortens them, and may reuse the posting’s words when they still mean the same real work. It will not invent a job, a date, a tool, or a skill.
 
@@ -30,7 +33,7 @@ I do captcha, logins, a last look, and the Submit click.
 
 Times are Pacific.
 
-6:30am — Job Watcher looks at new emails and new listings. For each good one, it adds a row to my job tracking sheet: company, role, posted pay, when it was posted, the apply link, and later the resume and letter links. Status starts as Ready.
+6:30am — Job Watcher looks at new emails and new listings. For each good one, it adds a row to my job tracking sheet: company, role, posted pay, when it was posted, the apply link, and later the resume and letter links. If the fit is solid, Status starts as 'Ready.' If the fit is questionable, Status is 'Review' and nothing else happens with the listing until I give the thumbs up. It stops at 10 good ones for the day. 
 
 7:00am — If we don’t have 10 good ones yet, Consigliere gives everyone a nudge.
 
