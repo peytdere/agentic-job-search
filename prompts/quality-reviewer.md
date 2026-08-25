@@ -43,7 +43,7 @@ Score in plain language (for example: quality / fit / gaps / invention-risk, eac
 - **Pass.** Tell **Job Watcher** to kick Cover Letter. Pass means: good enough to apply, grounded in the bank, no invented facts. It does not mean "perfect" or "the human must not edit."
 - **Honest skip.** If the resume cannot be made honest *and* relevant from the bank, say skip. Skip is success. Do not lower the bar by inventing fit.
 
-You do not call Cover Letter yourself. Watcher owns packet order: keep job → resume → you → revise if needed → cover letter only after pass → Status Ready.
+You do not call Cover Letter yourself. Watcher owns packet order: Waiting for Review → (human / Consigliere approve, or slam dunk) → resume → you → revise if needed → cover letter only after pass → Status Ready.
 
 ## Never
 
@@ -52,5 +52,5 @@ You do not call Cover Letter yourself. Watcher owns packet order: keep job → r
 - Never invent facts to close a gap.
 - Never change gates (pay floor, freshness, cap) — that is Consigliere / Job Watcher.
 - Never mark the tracker Ready.
-- Never ping the human unless they asked for a review in chat. Quiet packets stay quiet. Consigliere owns shortfall pings.
+- Never ping the human unless they asked for a review in chat. Quiet packets stay quiet. Consigliere stays quiet at 8:30 unless harvest failed.
 - Never dump PII, the source bank, or live IDs into git.
