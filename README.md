@@ -4,20 +4,17 @@
 
 I built a few helpers to take the boring parts of my job search off my plate.
 
-- Every morning **Job Watcher** looks for jobs. 
-- **Resume Generator** builds resumes.
-- **Quality Reviewer** checks resumes for quality.
-- **Cover Letter Generator** writes from the checked resumes.
-- **Consigliere** handles surprises and fills in the application.
-- I as the **User** read the application form, double-check what I’m actually sending, do any captcha or login along the way, and click Submit.
+Every morning Job Watcher reads job-alert emails and searches new listings, then logs the good ones as Waiting for Review. Resume Generator builds a one-page resume from my real work history — after I (or a slam dunk) say the row is ready. Quality Reviewer checks it against the job posting for quality, fit, and gaps. Cover Letter Generator writes a short letter from that resume. Consigliere works with me, keeps the other bots in line, holds them accountable, and pushes back on bad decisions. It still fills in the application and attaches the PDFs. It never clicks Submit.
 
-**This is about 5x faster than doing it by hand.** The bots never make up jobs I didn’t have, or skills I don’t have. If a posting uses different words for the same real work, they decide carefully whether to match those words. If the work isn’t in my history, they leave it out.
+I still read the form, double-check what I’m actually sending, do any captcha or login, and click Submit.
+
+This is about 5x faster than doing it by hand. The bots never make up jobs I didn’t have, or skills I don’t have. If a posting uses different words for the same real work, they decide carefully whether to match those words. If the work isn’t in my history, they leave it out.
 
 This page is the public story of how that works. My inbox, my full work history, and the live job list stay private.
 
 ## Who does what
 
-**Job Watcher** reads job-alert emails and searches new LinkedIn listings until there are up to 10 good ones in my applications queue. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). 
+**Job Watcher** reads job-alert emails and also searches LinkedIn for new postings. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). It logs them as Waiting for Review. It does not fill 10 Ready by itself.
 
 **Resume Generator** opens my private work history (about 10 years of real jobs) and builds a one-page resume for that posting. It picks the relevant parts, shortens them, and may reuse the posting’s words when they still mean the same real work. It will not invent a job, a date, a tool, or a skill.
 
@@ -25,41 +22,29 @@ This page is the public story of how that works. My inbox, my full work history,
 
 **Cover Letter Generator** writes a short letter from the resume that passed review, not from thin air.
 
-**Consigliere** is the traffic cop. It kicks the others when they stall, fills the application form, converts Google Docs to PDFs and attachesm, and pings me when the only thing left is Submit.
+**Consigliere** works with me, keeps the other bots in line, holds them accountable, and pushes back on bad decisions. It still fills the application form and attaches the PDFs. It never clicks Submit.
 
 I do captcha, logins, a last look, and the Submit click.
 
 ## A typical morning
 
-6:30am — Job Watcher looks at new emails and new listings. For each good one, it adds a row to my job tracking sheet: company, role, posted pay, when it was posted, the apply link, and later the resume and letter links. If the fit is solid, Status starts as 'Ready.' If the fit is questionable, Status is 'Review' and nothing else happens with the listing until I give the thumbs up. It stops at 10 good ones for the day. 
+Times are Pacific.
 
-7:00am — If we don’t have 10 good ones yet, Consigliere gives everyone a nudge.
+6:30am — Job Watcher looks at new emails and new listings. For each good one, it adds a row to my job tracking sheet: company, role, posted pay, when it was posted, the apply link. Status starts as Waiting for Review. Resume and letter docs wait.
 
-8:30am — If we’re still short, I get one ping. If we already have 10, nobody bothers me.
+7:00am — Consigliere checks that harvest happened. It does not auto-generate resumes or letters.
 
-Late morning — When I sit down, Consigliere and I walk the Ready list until those rows say Applied. When I’m close to finishing the queue, Consigliere asks if I want more for the day. Otherwise we just muscle through what we have and e-high-five, because why not.
+8:30am — Quiet unless harvest failed. If Watcher already logged the morning, nobody bothers me.
+
+Late morning — When I sit down, Consigliere and I walk the Ready list until those rows say Applied. When Ready is already full, we do not add more rows until I ask. When I’m close to finishing the queue, Consigliere asks if I want more for the day. Otherwise we just muscle through what we have and e-high-five, because why not.
 
 3:00pm on weekdays — Job Watcher only checks “you got an interview / you got rejected” mail. It does not pile on more new jobs. It just updates my tracking sheet.
-
-## How Job Watcher finds jobs
-
-1. LinkedIn already emails me Job Alerts. Job Watcher reads those emails through Gmail (that part is a real Google connection, not scraping).
-
-2. Each email is only a teaser, so Watcher opens the job link in Chrome and reads the full posting: pay, when it was posted, and the real apply button.
-
-3. It also searches for extra matches the same way a person would: run a search, open the listings, keep the good ones. That is not a LinkedIn API. It’s a browser on the helper computer looking at search pages. **I’ll say that again for those of us not already using similar tools: the bot uses a browser and searches for jobs.** Pretty capably, too.
-
-I'll dwell on that last point. For my own work, this feels like the third big jump I’ve seen in AI. First was self-attention at scale, when text generation actually got useful. Second was chain of thought, and some real ability to break a problem into steps. Third is this: bots that can operate computers, together, and actually take the problem solving into non-API realms.
-
-If LinkedIn asks that computer to log in, I have to do that once. Job Watcher does not get a secret feed.
-
-Resumes and letters are Google Docs. The queue is a Google Sheet. Apply pages are whatever the company uses (Greenhouse, Lever, SmartRecruiters, or their own site).
 
 ## Resume generator in action
 
 I keep one large private file of about 10 years of real work: jobs, dates, what I actually did, and the numbers that are true. It's basically the DISTINCT and UNION of 4 recent resumes that I put real time and effort into. That file never goes on GitHub.
 
-For each posting, **Resume Generator** does three things:
+For each posting, Resume Generator does three things:
 
 1. Picks the parts of my history that match this job.
 
@@ -69,13 +54,11 @@ For each posting, **Resume Generator** does three things:
 
 It will not invent a job, a date, a tool, or a skill. If the posting wants something I have never done, that line stays off the page.
 
-## The rest of the workflow
+Cover Letter Generator only writes after that resume exists. The letter has to match the resume, not a fantasy version of me. These files are not commonly required, but they usually don't go to waste, either. Most application pages ask if you want to explain why you want the job.
 
-**Quality Reviewer** reads the resume next to the posting and sends anything fishy back for a fix.
+Quality Reviewer reads both next to the posting and sends anything fishy back for a fix.
 
-**Cover Letter Generator** only writes after that resume exists. The letter has to match the resume, not a fantasy version of me. These files are not commonly required, but they usually don't go to waste, either. Most application pages ask if you want to explain why you want the job.
-
-**Consigliere** will start filling fields, then dump the cover letter material in the "why you want the job" field, and I will usually ruthlessly edit and put things in my own friendlier voice. Nothing I submit, even the resume, ever goes untouched. That's the only way to be.
+Consigliere will start filling fields, then dump the cover letter material in the "why you want the job" field, and I will usually ruthlessly edit and put things in my own friendlier voice. Nothing I submit, even the resume, ever goes untouched. That's the only way to be.
 
 ## What this runs on
 
@@ -85,7 +68,19 @@ Each helper is a Grok Bot with a job. Cursor is where they live, where the morni
 
 The helpers also have a computer of their own: a Linux desktop with Chrome. That’s where they open job sites, fill forms, and save PDFs. When a site needs my password, a captcha, or the Submit click, I take that computer for a minute.
 
+### How Job Watcher finds jobs
 
+1. LinkedIn already emails me Job Alerts. Job Watcher reads those emails through Gmail (that part is a real Google connection, not scraping).
+
+2. Each email is only a teaser, so Watcher opens the job link in Chrome when it needs pay, when it was posted, and the real apply button. It logs Waiting for Review. It does not turn every posting into a resume packet.
+
+3. It also searches for extra matches the same way a person would: run a search, open the listings, keep the good ones. That is not a LinkedIn API. **It’s a browser on the helper computer looking at search pages. I’ll say that again: the bot uses a browser and searches for jobs.**
+
+If LinkedIn asks that computer to log in, I have to do that once. Job Watcher does not get a secret feed.
+
+Resumes and letters are Google Docs. The queue is a Google Sheet. Apply pages are whatever the company uses (Greenhouse, Lever, SmartRecruiters, or their own site).
+
+For my own work, this feels like the third big jump I’ve seen in AI. First was self-attention at scale, when text generation actually got useful. Second was chain of thought, and some real ability to break a problem into steps. Third is this: bots that can operate computers, together.
 
 ## How long this takes
 
@@ -110,35 +105,38 @@ This runs on **Cursor + Grok Bot**, not a custom orchestrator.
 | Artifacts | Google Docs (resumes, letters) and Google Sheets (tracker) |
 | ATS surfaces | Greenhouse, Lever, SmartRecruiters (plus employer career pages when those resolve) |
 
+LinkedIn is an **email ingest**, not an API. Job alerts land in Gmail; the watcher reads those messages. There is no LinkedIn posting API in this design.
+
 ## Architecture
 
-Default path is a straight line. The coordinator sits **beside** it (policy, kicks, shortfall pings). Submit is never on the agent path.
+Default path is harvest → Waiting for Review → approve → generate → Quality Reviewer → letter → Ready. Consigliere sits **beside** it (policy, harvest check, pushback) and on the approve step. Submit is never on the agent path.
 
 ```mermaid
 flowchart LR
-  coord[Coordinator]
+  cons[Consigliere]
 
   subgraph defaultPath [Default path]
     direction LR
     alerts[Job alerts] --> watcher[Watcher]
-    watcher -->|qualifying packet| gen[Resume generator]
-    gen --> letter[Cover letter]
-    letter --> tracker[Tracker]
+    watcher -->|Waiting for Review| approve[Human or Consigliere approve]
+    approve --> gen[Resume generator]
+    gen --> qr[Quality reviewer]
+    qr --> letter[Cover letter]
+    letter -->|Ready| tracker[Tracker]
   end
 
-  coord -.-> watcher
-  coord -.-> gen
-  coord -.-> letter
+  cons -.-> watcher
+  cons -.-> approve
+  cons -.-> gen
+  cons -.-> qr
+  cons -.-> letter
 
   watcher -->|fails gates| skip[Skip — success]
   tracker --> walk[Human apply-walk]
   walk --> submit[Submit — human only]
-
-  letter -.-> qr[Quality reviewer]
-  qr -.-> tracker
 ```
 
-The Quality reviewer is **optional and off the default path**. Most packets go Watcher → Resume generator → Cover letter → Tracker. A human then walks Ready → Applied and clicks **Submit**.
+Quality Reviewer is **on the default path**, between the resume and the letter. Watcher logs the tracker as Waiting for Review. Human or Consigliere approve. Then gen → QR → letter → Ready. A human then walks Ready → Applied and clicks **Submit**.
 
 See [docs/architecture.md](docs/architecture.md) for data flow and failure modes.
 
@@ -148,21 +146,21 @@ Specialists beat a god-bot. Resume quality and cover-letter voice are different 
 
 | Role | Owns | Does not own |
 | --- | --- | --- |
-| **Coordinator** | Policy, output contract, daily kick, shortfall ping, weekday outcome-mail. When to add or refuse a bot. | Writing resumes or letters. Harvest. Submit. |
-| **Watcher** | Ingest (Gmail alerts + searches), parse, fetch the real posting, salary/role/age gates, dedupe, skip log. Hands a packet downstream. | Writing application materials. Clicking Submit. |
-| **Resume generator** | One-page tailored Google Doc from a verified source bank. Echo apply URL. Tracker resume link. | Inventing employers, dates, titles, or metrics. Hunting jobs. Letters. |
-| **Cover letter** | Short letter grounded in **that** resume + the JD. Third tracker link. Status → Ready. | Hunting jobs. Writing the resume. Submit. |
-| **Quality reviewer** (optional, off default path) | A second pass on a packet when asked (facts vs source bank, letter grounded in resume). | Default-path generation. Changing gates. Submit. |
+| **Consigliere** | Works with the human, keeps specialists in line, holds them accountable, pushes back on bad calls. Policy, harvest check, form-fill up to but not including Submit. | Writing resumes or letters. Harvest. Submit. Filling 10 Ready at 7am. Adding rows when Ready is already full. Generating before review. |
+| **Watcher** | Ingest (Gmail alerts + searches), parse, gates, dedupe, skip log. Tracker row as Waiting for Review with apply URL. Frugal: search + log. | Writing application materials. Auto-kicking Resume Generator. Following every JD into a packet. Clicking Submit. |
+| **Resume generator** | One-page tailored Google Doc from a verified source bank, after approval or slam dunk. Echo apply URL. Tracker resume link. | Inventing employers, dates, titles, or metrics. Hunting jobs. Letters. |
+| **Cover letter** | Short letter grounded in **that** resume + the JD, after a Quality Reviewer pass. Third tracker link. Status → Ready. | Hunting jobs. Writing the resume. Submit. |
+| **Quality reviewer** (default path) | A second pass on **every** packet before the letter (facts vs source bank, fit, gaps). | Changing gates. Marking Ready. Submit. |
 
 None of them own captcha, ATS file pickers, Gmail/Drive OAuth, login/2FA on the agent computer, or recruiter inbound. Details: [docs/agents.md](docs/agents.md), [docs/human-in-the-loop.md](docs/human-in-the-loop.md). How a one-pager is cut from the source bank: [Resume and cover-letter strategy](#resume-and-cover-letter-strategy).
 
 ## Output contract
 
-Every qualifying job becomes one tracker row:
+Every qualifying job becomes one tracker row. Status starts as **Waiting for Review**. Ready only after resume + letter after human (or slam dunk) approval.
 
 | Apply URL | Resume | Cover letter | Status |
 | --- | --- | --- | --- |
-| Employer careers / ATS page when possible (Greenhouse, Lever, SmartRecruiters). LinkedIn job URL only as fallback. | One-page tailored Google Doc | Short letter grounded in that resume + the posting | Ready → human walks to Applied |
+| Employer careers / ATS page when possible (Greenhouse, Lever, SmartRecruiters). LinkedIn job URL only as fallback. Harvest logs this first. | One-page tailored Google Doc, after approval | Short letter grounded in that resume + the posting, after Quality Reviewer | Waiting for Review → (approve) → Ready → human walks to Applied |
 
 If a posting has no salary, misses the compensation floor, is a repeat, is older than 60 days, or has **no post date**, the system **skips**. Skip is a successful outcome.
 
@@ -182,7 +180,7 @@ Tailoring is choose / shorten / drop / rephrase. It is not invention.
 
 The cover letter is written **after** that resume, from **that resume + the JD only**. Same no-invention rule. Short, specific, no "I am writing to express." No "AI wrote this." It must not claim facts that are not on the tailored resume or in the bank.
 
-The Quality reviewer is optional and off the default path. When invoked, it checks facts against the bank and that the letter is grounded in the resume that was just written.
+Quality Reviewer is on the default path. It checks facts against the bank, fit against the posting, and that the letter will be grounded in the resume that was just written. No letter without a pass.
 
 ```mermaid
 flowchart LR
@@ -209,10 +207,10 @@ These are product decisions, not prompts-as-magic. Numbers below are **this sear
 2. **Posted compensation required.** No salary in the posting → skip. Do not guess.
 3. **Floor.** Example: **$200k posted**. A range counts only if it actually reaches the floor; a $90k–$120k posting is not "kind of $200k."
 4. **Freshness.** Skip if the posting is older than **60 days**, or if there is **no post date**.
-5. **Role match.** Title and posting have to look like the target family (program / TPM / AI data ops / evaluation / HITL / governance). Adjacent junk in an alert digest gets skipped.
+5. **Role match, fit first.** Title and posting have to look like the target family (HITL / evals / data ops / AI-related PM). Skip cloud infra, compute, SPMO, horizontal BizOps, and infra TPMs. Rank fit ahead of a bigger number. Pay is a floor, not a rank key. Adjacent junk in an alert digest gets skipped.
 6. **Dedupe by job id.** Same posting from two alerts is one packet.
-7. **Fetch the posting.** Email cards are not job descriptions. Follow the link, pull the full JD, prefer the employer apply URL.
-8. **Cap.** At most **10 Ready** packets per day. Extra qualifying jobs wait; do not flood the human.
+7. **Fetch enough to gate.** Email cards are not job descriptions. Resolve pay, post date, and the employer apply URL. Do not follow every JD into a packet.
+8. **Cap.** At most **~10 Ready** as a last-mile full queue. Harvest logs Waiting for Review; it does not fill 10 Ready by itself. When Ready is already full, do not add rows until the human asks.
 9. **No invention.** The source bank is collated from real work. Wording can be tailored. Employers, dates, titles, and metrics cannot be made up.
 10. **Letters don't confess.** Cover letters do not say "AI wrote this." For roles that are actually about AI systems, one sentence about having shipped this pipeline is a **project**, not a disclosure.
 
@@ -222,11 +220,11 @@ Times are **Pacific**. Harvest runs **every day, including weekends**. Outcome-m
 
 | Time (PT) | What | Notes |
 | --- | --- | --- |
-| **6:30am** | Watcher harvest | Daily, including weekends. Work toward the 10 Ready cap. |
-| **7:00am** | Coordinator kick | Start generators for packets that passed gates. |
-| **8:30am** | Shortfall ping **only** | Ping if Ready is under the cap. Stay quiet if the morning already hit 10. |
+| **6:30am** | Watcher harvest | Daily, including weekends. Log Waiting for Review. Not a race to 10 Ready. Stop adding rows if Ready is already ~10. |
+| **7:00am** | Consigliere harvest-check | Confirm harvest happened. Do not start generators for unreviewed rows. Do not fill 10 Ready. |
+| **8:30am** | Quiet unless harvest failed | Stay quiet if harvest ran. One ping only if it did not. |
 | **3:00pm** | Outcome-mail **only** | Weekdays. Not a second harvest. |
-| Human, unscheduled | Apply-walk | Ready → Applied. Submit is human-only. |
+| Human, unscheduled | Apply-walk of Ready | Ready → Applied. Submit is human-only. When Ready is full, do not add more until the human asks. |
 
 Full cadence: [docs/schedule.md](docs/schedule.md).
 
@@ -291,7 +289,7 @@ flowchart TB
 
   subgraph pipeEst [This pipeline — ESTIMATES]
     direction TB
-    pAgents[Watcher + generator + letter + tracker, unattended]
+    pAgents[Watcher + generator + QR + letter + tracker, unattended]
     pHuman[Human: review / captcha / Submit]
     pAgents --> pHuman
     pTotal[Human about 2–8 min per apply]
