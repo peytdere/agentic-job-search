@@ -1,25 +1,30 @@
-# Agentic job-search pipeline
+# Job-search helpers
 
-A multi-agent workflow I designed and run for my own job search.
+## What this is
 
-It turns noisy job alerts and high value new opportunities into a **review and submit workflow.** I built it as a program manager who ships evaluation and data-ops systems, not as a demo of "AI wrote my applications."
+I built a few helpers to take the boring parts of my job search off my plate.
 
-This repo is the **public case study**. The live agents, inbox, source-of-truth meta-resume, and tracker stay private. Some agent prompts (at least the meaty bits) are included here.
+Every morning Job Watcher reads job-alert emails and searches new listings until there are up to 10 good ones in my applications queue. Resume Generator builds a one-page resume from my real work history. Quality Reviewer checks it against the job posting for quality, fit, and gaps. Cover Letter Generator writes a short letter from that resume. Consigliere handles surprises, fills in the application, and attaches the PDFs.
 
-## Why this exists
+I still read the form, double-check what I’m actually sending, do any captcha or login, and click Submit.
 
-Applying to jobs is time consuming, but generating bespoke resumes freshly upon pasting a job description frequently ends up in pure slop.
+This is about 5x faster than doing it by hand. The bots never make up jobs I didn’t have, or skills I don’t have. If a posting uses different words for the same real work, they decide carefully whether to match those words. If the work isn’t in my history, they leave it out.
 
-- What are the **units of output** a job applicant actually needs to produce that an AI can do effectively?
-  - Resume with only relevant experience + cover letter telling a hiring manager what they want to hear + application fields pre-filled
-- Which **quality checks** keep the system from generating junk?
-  - Choosing only the best items from a master/meta-resume that has all job duties and achievements, NOT generating anything fantastical or new
-  - Having a review bot that ensures I'm not bs'ing or pulling irrelevant history
-- How do you split work across specialists so **no single agent becomes overwhelmed OR a god-bot?**
-  - Basically, if a unique artifact is being generated, make it a separate agent
-  - Administrative tasks can be lumped together based on workflow timing and/or task similarity
-- Where is the **human-in-loop contribution** (review + Submit), because the ATS will not cooperate otherwise?
-  - Authentication, captcha completion, final review of resumes + cover letters, final review of application fields, actually clicking 'submit.'
+This page is the public story of how that works. My inbox, my full work history, and the live job list stay private.
+
+## Who does what
+
+**Job Watcher** reads job-alert emails and also searches LinkedIn for new postings. It only keeps roles that fit (the right kind of work, posted pay high enough, posted in the last 60 days). It stops at 10 good ones for the day.
+
+**Resume Generator** opens my private work history (about 10 years of real jobs) and builds a one-page resume for that posting. It picks the relevant parts, shortens them, and may reuse the posting’s words when they still mean the same real work. It will not invent a job, a date, a tool, or a skill.
+
+**Quality Reviewer** reads that resume next to the job posting. It flags weak fit, missing pieces, and anything that sounds made up. If something needs a fix, Resume Generator tries again.
+
+**Cover Letter Generator** writes a short letter from the resume that passed review, not from thin air.
+
+**Consigliere** is the traffic cop. It kicks the others when they stall, fills the application form, attaches the PDFs, and pings me when the only thing left is Submit.
+
+I do captcha, logins, a last look, and the Submit click.
 
 ## Stack
 
