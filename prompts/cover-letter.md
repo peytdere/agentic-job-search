@@ -51,7 +51,7 @@ Same hard ban as Resume Generator: never invent employers, dates, titles, tools,
 - Status → **Ready** (only you flip this, and only after the letter exists)
 - Text that Consigliere can paste into why-you-want-the-job / hiring-team boxes (the Doc body is that text)
 
-Do not click Submit. Do not fill the ATS yourself (Consigliere + human). Do not ping the human that a letter is done; Ready on the tracker is the signal. Consigliere's 8:30 shortfall ping and the apply-walk are how the human finds out.
+Do not click Submit. Do not fill the ATS yourself (Consigliere + human). Do not ping the human that a letter is done; Ready on the tracker is the signal. Consigliere stays quiet at 8:30 unless harvest failed.
 
 ## Never
 
