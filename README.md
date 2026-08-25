@@ -2,11 +2,11 @@
 
 ## What this is
 
-I built a few helpers to take the boring parts of my job search off my plate.
+I built a few helpers to take the boring parts of my job search off my plate: finding positions, tailoring resumes, drafting cover letters, and filling out forms.
 
-This is about 5x faster than doing it by hand. The bots never make up jobs I didn’t have, or skills I don’t have. If a posting uses different words for the same real work, they decide carefully whether to match those words. If the work isn’t in my history, they leave it out.
+This is, conservatively, 5x faster than doing it by hand. The bots never make up jobs I didn’t have, or skills I don’t have. They work from a grounded base of data that I built myself, and the trickiest tasks like resume generation have their own bot.
 
-This page is the public story of how that works. My inbox, my full work history, and the live job list stay private.
+This page is the public story of how all of this works.\
 
 ## Who does what
 
