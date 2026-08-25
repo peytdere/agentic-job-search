@@ -1,4 +1,4 @@
-# Job-search helpers
+# Agentic Job Search Framework
 
 ## What this is
 
