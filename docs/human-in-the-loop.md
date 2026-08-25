@@ -8,7 +8,7 @@ The pipeline's job is a **Ready packet**. The human's job is the last mile. Thes
 
 **Submit** (human only): the actual application send. Agents may prepare. They may not click it — not on "my" ATS, not on localhost, not in a lab framing.
 
-The coordinator brief mentions apply-walk so the morning run has a defined consumer. It still forbids Submit.
+The Consigliere brief mentions apply-walk so the morning run has a defined consumer. It still forbids Submit.
 
 ## Limits
 
